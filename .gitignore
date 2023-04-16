@@ -35,5 +35,7 @@ yarn-error.log*
 next-env.d.ts
 
 /backend/node_modules
+/.vscode
+.gitignore
 
 
