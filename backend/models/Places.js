@@ -14,10 +14,15 @@ const PlaceSchema = new mongoose.Schema({
     required: true
   },
   
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  },
+  
   updated_date: {
     type: Date,
     default: Date.now
   }
 });
 
-module.exports = Place = mongoose.model('place', PlaceSchema);
+module.exports = Place = mongoose.model('Place', PlaceSchema);

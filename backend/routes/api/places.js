@@ -33,6 +33,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
+    console.log('update place')
     Place.findByIdAndUpdate(req.params.id, req.body)
       .then(place => res.json({ msg: 'Updated successfully' }))
       .catch(err =>

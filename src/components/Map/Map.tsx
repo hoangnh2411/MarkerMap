@@ -5,14 +5,14 @@ import { Icon, marker } from "leaflet";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MapType } from "../../models/MarkerType";
-import Axios from '../../modules/axios'
+import Axios from "../../modules/axios";
+import { CategoriesType } from "@/models/CategoryType";
 const Map = () => {
-  const [markers, setMarkers] = useState<MapType>([]);
+  const [categories, setCategories] = useState<CategoriesType>([]);
   const getData = () =>
-  Axios
-      .get('/api/places')
+    Axios.get("/api/categories")
       .then((res) => {
-        setMarkers(res.data);
+        setCategories(res.data);
       })
       .catch((err) => {
         console.log("Error from ShowBookList");
@@ -51,15 +51,17 @@ const Map = () => {
         </Popup>
       </Marker> */}
 
-      {markers.map((market) => (
-        <Marker
-          key={market._id}
-          position={[market.lat_code, market.lng_code]}
-          icon={customIcon("./church.png")}
-        >
-          <Popup>{market.name}</Popup>
-        </Marker>
-      ))}
+      {categories.map((market) =>
+        market.places?.map((place) => (
+          <Marker
+            key={place._id}
+            position={[place.lat_code, place.lng_code]}
+            icon={customIcon(`./church_${market.iconColor}.png`)}
+          >
+            <Popup>{place.name}</Popup>
+          </Marker>
+        ))
+      )}
     </MapContainer>
   );
 };

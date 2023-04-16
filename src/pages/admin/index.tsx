@@ -7,7 +7,9 @@ import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import CreatePlace from "@/components/Admin/Place/CreatePlace";
 import PlaceList from "@/components/Admin/Place/PlaceList";
-import { ADMIN_CURRENT_PAGE_CREATE_PLACE, ADMIN_CURRENT_PAGE_PLACE_LIST, ADMIN_MENU_KEY_TAB_CATEGORY, ADMIN_MENU_KEY_TAB_PLACE } from "@/constant/AdminConstant";
+import { ADMIN_CURRENT_PAGE_CATEGORY_LIST, ADMIN_CURRENT_PAGE_CREATE_CATEGORY, ADMIN_CURRENT_PAGE_CREATE_PLACE, ADMIN_CURRENT_PAGE_PLACE_LIST, ADMIN_MENU_KEY_TAB_CATEGORY, ADMIN_MENU_KEY_TAB_PLACE } from "@/constant/AdminConstant";
+import CateogoryList from "@/components/Admin/Category/CategoryList";
+import CreateCategory from "@/components/Admin/Category/CreateCategory";
 
 const items: MenuProps["items"] = [
   {
@@ -24,19 +26,21 @@ const items: MenuProps["items"] = [
 ];
 
 const App: React.FC = () => {
-  const [menuTabKey, setMenuTabKey] = useState(ADMIN_MENU_KEY_TAB_PLACE);
-    const [currentPageKey, setCurrentPageKey] = useState(ADMIN_CURRENT_PAGE_PLACE_LIST)
+  const [menuTabKey, setMenuTabKey] = useState(ADMIN_MENU_KEY_TAB_CATEGORY);
+    const [currentPageKey, setCurrentPageKey] = useState(ADMIN_CURRENT_PAGE_CATEGORY_LIST)
 
     const [id,setID] = useState();
 
-  const onClick: MenuProps["onClick"] = (e) => {
+  const onClick: MenuProps["onClick"] = async (e) => {
     setMenuTabKey(e.key);
     switch (e.key) {
         case (ADMIN_MENU_KEY_TAB_PLACE) : {
-            setCurrentPageKey(ADMIN_CURRENT_PAGE_PLACE_LIST)
+            await setCurrentPageKey(ADMIN_CURRENT_PAGE_PLACE_LIST)
+            break; 
         }
         case (ADMIN_MENU_KEY_TAB_CATEGORY): {
-            setCurrentPageKey(ADMIN_CURRENT_PAGE_PLACE_LIST)
+            await setCurrentPageKey(ADMIN_CURRENT_PAGE_CATEGORY_LIST)
+            break; 
         }
     }
   };
@@ -62,6 +66,9 @@ const App: React.FC = () => {
       />
       <div>{(menuTabKey === ADMIN_MENU_KEY_TAB_PLACE && currentPageKey === ADMIN_CURRENT_PAGE_CREATE_PLACE) && <CreatePlace onChangeView={changeView} id={id}  />}</div>
       <div>{(menuTabKey === ADMIN_MENU_KEY_TAB_PLACE && currentPageKey === ADMIN_CURRENT_PAGE_PLACE_LIST) && <PlaceList onCreateOrUpdate={onCreateOrUpdate} />}</div>
+      <div>{(menuTabKey === ADMIN_MENU_KEY_TAB_CATEGORY && currentPageKey === ADMIN_CURRENT_PAGE_CATEGORY_LIST) && <CateogoryList onCreateOrUpdate={onCreateOrUpdate} />}</div>
+      <div>{(menuTabKey === ADMIN_MENU_KEY_TAB_CATEGORY && currentPageKey === ADMIN_CURRENT_PAGE_CREATE_CATEGORY) && <CreateCategory onChangeView={changeView} id={id}  />}</div>
+
     </>
   );
 };
