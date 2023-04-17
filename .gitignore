@@ -39,6 +39,13 @@ next-env.d.ts
 .gitignore
 
 package-lock.json
+/.vscode
+package-lock.json
+yarn.lock
+
+backend/package-lock.json
+backend/yarn.lock
+
 
 
 
