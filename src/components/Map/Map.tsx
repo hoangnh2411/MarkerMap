@@ -56,17 +56,20 @@ const Map = () => {
         ),
       }))
     );
-    setCategoriesData(
-      categories.map((category) => ({
-        title: category.name,
-        key: category._id,
-        children: category.places?.map((place) => ({
-          title: place.name,
-          key: place._id,
-        })),
-      }))
-    );
+    
   }, [selectedKeys]);
+  useEffect(() => {
+    setCategoriesData(
+        categories.map((category) => ({
+          title: category.name,
+          key: category._id,
+          children: category.places?.map((place) => ({
+            title: place.name,
+            key: place._id,
+          })),
+        }))
+      );
+  },[categories])
 
   const customIcon = (imageUrl: string) =>
     new Icon({
@@ -75,7 +78,6 @@ const Map = () => {
       className: "color-red",
     });
   const defaultCheckedKeys = categoriesData.flatMap((node) => node.key);
-
   return (
     <div>
       <Drawer
