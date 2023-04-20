@@ -1,18 +1,37 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  ZoomControl,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon, marker } from "leaflet";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { MapType } from "../../models/MarkerType";
 import Axios from "../../modules/axios";
+
 import { CategoriesType } from "@/models/CategoryType";
+import { Button, Drawer, Space, Tree } from "antd";
+import { CaretLeftOutlined, MenuUnfoldOutlined, SearchOutlined } from "@ant-design/icons";
 const Map = () => {
   const [categories, setCategories] = useState<CategoriesType>([]);
+  const [categoriesShow, setCategoriesShow] = useState<CategoriesType>([]);
+  const [visible, setVisible] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
   const getData = () =>
     Axios.get("/api/categories")
       .then((res) => {
+        console.log(res.data);
         setCategories(res.data);
+        setCategoriesShow(res.data);
       })
       .catch((err) => {
         console.log("Error from ShowBookList");
@@ -22,47 +41,84 @@ const Map = () => {
     getData();
   }, []);
 
+  useEffect(() => {
+    setCategoriesShow(
+      categories.map((category) => ({
+        ...category,
+        places: category.places?.filter((place) =>
+          selectedKeys.includes(place._id)
+        ),
+      }))
+    );
+  }, [selectedKeys]);
+
   const customIcon = (imageUrl: string) =>
     new Icon({
-      // iconUrl: "https://cdn-icons-png.flaticon.com/512/8996/8996813.png",
       iconUrl: imageUrl,
       iconSize: [60, 60], // Size
-      // iconColor: [100, 100, 100, 0]
       className: "color-red",
     });
-
+  const defaultCheckedKeys = categories.flatMap((node) => node._id);
   return (
-    <MapContainer
-      style={{ width: "100%", height: "100vh" }}
-      center={[21.0278, 105.8342]}
-      zoom={13}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
-        // url="http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" // satellite
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" // terrain
-        maxZoom={20}
-        subdomains={["mt0", "mt1", "mt2", "mt3"]}
-      />
-      {/* <Marker icon={customIcon} position={[21.02861, 105.8489]}>
-        <Popup>
-          Nhà thờ lớn HN
-        </Popup>
-      </Marker> */}
-
-      {categories.map((market) =>
-        market.places?.map((place) => (
-          <Marker
-            key={place._id}
-            position={[place.lat_code, place.lng_code]}
-            icon={customIcon(`./church_${market.iconColor}.png`)}
-          >
-            <Popup>{place.name}</Popup>
-          </Marker>
-        ))
-      )}
-    </MapContainer>
+    <div>
+      <Drawer
+        title="Danh sách"
+        placement="left"
+        closable={false}
+        onClose={onClose}
+        open={visible}
+        extra={
+          <Space>
+            <Button onClick={onClose} icon={<CaretLeftOutlined />}></Button>
+          </Space>
+        }
+      >
+        <>
+          {/* Drawer content */}
+          <Tree
+            checkable
+            defaultCheckedKeys={defaultCheckedKeys}
+            onCheck={(checkedKeys) => {
+              setSelectedKeys(checkedKeys as string[]);
+            }}
+            fieldNames={{ title: "name", key: "_id", children: "places" }}
+            treeData={categories}
+          />
+        </>
+      </Drawer>
+      <MapContainer
+        zoomControl={false}
+        style={{ width: "100%", height: "100vh" }}
+        center={[21.0278, 105.8342]}
+        zoom={13}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={20}
+          subdomains={["mt0", "mt1", "mt2", "mt3"]}
+        />
+        <ZoomControl position="topright"></ZoomControl>
+        <Button
+          className="leaflet-control leaflet-bar"
+          type="primary"
+          style={{ backgroundColor: "#1677ff" }}
+          onClick={showDrawer}
+          icon={<MenuUnfoldOutlined />}
+        ></Button>
+        {categoriesShow.map((market) =>
+          market.places?.map((place) => (
+            <Marker
+              key={place._id}
+              position={[place.lat_code, place.lng_code]}
+              icon={customIcon(`./church_${market.iconColor}.png`)}
+            >
+              <Popup>{place.name}</Popup>
+            </Marker>
+          ))
+        )}
+      </MapContainer>
+    </div>
   );
 };
 
