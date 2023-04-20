@@ -13,12 +13,18 @@ import Axios from "../../modules/axios";
 
 import { CategoriesType } from "@/models/CategoryType";
 import { Button, Drawer, Space, Tree } from "antd";
-import { CaretLeftOutlined, MenuUnfoldOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  CaretLeftOutlined,
+  MenuUnfoldOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { DataNode } from "antd/es/tree";
 const Map = () => {
   const [categories, setCategories] = useState<CategoriesType>([]);
   const [categoriesShow, setCategoriesShow] = useState<CategoriesType>([]);
   const [visible, setVisible] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [categoriesData, setCategoriesData] = useState<DataNode[]>([]);
   const showDrawer = () => {
     setVisible(true);
   };
@@ -26,10 +32,9 @@ const Map = () => {
   const onClose = () => {
     setVisible(false);
   };
-  const getData = () =>
-    Axios.get("/api/categories")
+  const getData = async () =>
+    await Axios.get("/api/categories")
       .then((res) => {
-        console.log(res.data);
         setCategories(res.data);
         setCategoriesShow(res.data);
       })
@@ -40,6 +45,7 @@ const Map = () => {
   useEffect(() => {
     getData();
   }, []);
+  useEffect(() => {}, [categories]);
 
   useEffect(() => {
     setCategoriesShow(
@@ -50,6 +56,16 @@ const Map = () => {
         ),
       }))
     );
+    setCategoriesData(
+      categories.map((category) => ({
+        title: category.name,
+        key: category._id,
+        children: category.places?.map((place) => ({
+          title: place.name,
+          key: place._id,
+        })),
+      }))
+    );
   }, [selectedKeys]);
 
   const customIcon = (imageUrl: string) =>
@@ -58,7 +74,8 @@ const Map = () => {
       iconSize: [60, 60], // Size
       className: "color-red",
     });
-  const defaultCheckedKeys = categories.flatMap((node) => node._id);
+  const defaultCheckedKeys = categoriesData.flatMap((node) => node.key);
+
   return (
     <div>
       <Drawer
@@ -81,8 +98,7 @@ const Map = () => {
             onCheck={(checkedKeys) => {
               setSelectedKeys(checkedKeys as string[]);
             }}
-            fieldNames={{ title: "name", key: "_id", children: "places" }}
-            treeData={categories}
+            treeData={categoriesData}
           />
         </>
       </Drawer>
