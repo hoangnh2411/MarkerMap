@@ -16,6 +16,7 @@ import { Button, Drawer, Space, Tooltip, Tree } from "antd";
 import {
   CaretLeftOutlined,
   GlobalOutlined,
+  GoogleOutlined,
   MenuUnfoldOutlined,
   PhoneOutlined,
   SearchOutlined,
@@ -147,7 +148,7 @@ const Map = () => {
                     />
                     <Button
                       shape="circle"
-                      icon={<GlobalOutlined style={{verticalAlign: "0.125rem"}}/>}
+                      icon={<GoogleOutlined  style={{verticalAlign: "0.125rem"}}/>}
                       onClick={() => window.open(`https://www.google.com/maps/dir//${place.name}`, "_blank")}
                     />
                     <Tooltip title={place.phone_number}>
