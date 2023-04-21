@@ -12,10 +12,12 @@ import { useEffect, useState } from "react";
 import Axios from "../../modules/axios";
 
 import { CategoriesType } from "@/models/CategoryType";
-import { Button, Drawer, Space, Tree } from "antd";
+import { Button, Drawer, Space, Tooltip, Tree } from "antd";
 import {
   CaretLeftOutlined,
+  GlobalOutlined,
   MenuUnfoldOutlined,
+  PhoneOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { DataNode } from "antd/es/tree";
@@ -56,20 +58,19 @@ const Map = () => {
         ),
       }))
     );
-    
   }, [selectedKeys]);
   useEffect(() => {
     setCategoriesData(
-        categories.map((category) => ({
-          title: category.name,
-          key: category._id,
-          children: category.places?.map((place) => ({
-            title: place.name,
-            key: place._id,
-          })),
-        }))
-      );
-  },[categories])
+      categories.map((category) => ({
+        title: category.name,
+        key: category._id,
+        children: category.places?.map((place) => ({
+          title: place.name,
+          key: place._id,
+        })),
+      }))
+    );
+  }, [categories]);
 
   const customIcon = (imageUrl: string) =>
     new Icon({
@@ -118,12 +119,13 @@ const Map = () => {
         />
         <ZoomControl position="topright"></ZoomControl>
         <Button
-          className="leaflet-control leaflet-bar"
-          type="primary"
-          style={{ backgroundColor: "#1677ff" }}
           onClick={showDrawer}
-          icon={<MenuUnfoldOutlined />}
-        ></Button>
+          className="leaflet-control leaflet-bar"
+          style={{ backgroundColor: "#1677ff" }}
+          type="primary"
+          shape="circle"
+          icon={<SearchOutlined />}
+        />
         {categoriesShow.map((market) =>
           market.places?.map((place) => (
             <Marker
@@ -131,7 +133,27 @@ const Map = () => {
               position={[place.lat_code, place.lng_code]}
               icon={customIcon(`./church_${market.iconColor}.png`)}
             >
-              <Popup>{place.name}</Popup>
+              <Popup>
+                <div style={{ width: "100%", justifyContent: "center",textAlign: "center" }}>
+                  <p>
+                    <strong>{place.name}</strong>
+                  </p>
+                  <p>{place.address}</p>
+                  <div>
+                    <Button
+                      shape="circle"
+                      icon={<GlobalOutlined style={{verticalAlign: "0.125rem"}}/>}
+                      onClick={() => window.open(place.website_link, "_blank")}
+                    />
+                    <Tooltip title={place.phone_number}>
+                      <Button
+                        shape="circle"
+                        icon={<PhoneOutlined style={{verticalAlign: "0.125rem"}} />}
+                      />
+                    </Tooltip>
+                  </div>
+                </div>
+              </Popup>
             </Marker>
           ))
         )}

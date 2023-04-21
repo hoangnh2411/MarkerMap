@@ -36,6 +36,9 @@ const CreatePlace = (props: ChildComponentProps) => {
     lng_code: 0,
     name: "",
     lat_code: 0,
+    website_link: "",
+    phone_number: "",
+    address: "",
   });
 
   useEffect(() => {
@@ -47,6 +50,9 @@ const CreatePlace = (props: ChildComponentProps) => {
             form.setFieldValue("name", res.data.name);
             form.setFieldValue("lat_code", res.data.lat_code);
             form.setFieldValue("lng_code", res.data.lng_code);
+            form.setFieldValue("website_link", res.data.website_link);
+            form.setFieldValue("phone_number", res.data.phone_number);
+            form.setFieldValue("address", res.data.address);
           })
           .catch((err) => console.log(err));
     };
@@ -86,7 +92,7 @@ const CreatePlace = (props: ChildComponentProps) => {
     setSearchResult(result);
   };
   return (
-    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+    <Space direction="vertical" size="middle" style={{ display: "flex" }}>
       <Card title={props.id === null ? "Thêm mới" : "Cập nhật"}>
         <Form
           form={form}
@@ -106,7 +112,9 @@ const CreatePlace = (props: ChildComponentProps) => {
           >
             <Input />
           </Form.Item>
-
+          <Form.Item label="Địa chỉ" name="address">
+            <Input style={{ width: "100%" }} />
+          </Form.Item>
           <Form.Item
             label="Kinh độ"
             name="lat_code"
@@ -121,6 +129,12 @@ const CreatePlace = (props: ChildComponentProps) => {
             rules={[{ required: true, message: "Vui lòng thêm vĩ độ" }]}
           >
             <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item label="Số điện thoại" name="phone_number">
+            <Input style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item label="Website" name="website_link">
+            <Input style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

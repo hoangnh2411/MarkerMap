@@ -19,15 +19,6 @@ interface ChildComponentProps {
 }
 
 const PlaceList = (props: ChildComponentProps) => {
-  interface DataType {
-    key: string;
-    name: string;
-    lat_code: number;
-    lng_code: number;
-    //   address: string;
-    //   tags: string[];
-  }
-
   const columns: ColumnsType<MarkerType> = [
     {
       title: "Name",
@@ -35,14 +26,20 @@ const PlaceList = (props: ChildComponentProps) => {
       key: "name",
     },
     {
-      title: "Kinh độ",
-      dataIndex: "lat_code",
-      key: "lat_code",
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
     },
     {
-      title: "Vĩ độ",
-      dataIndex: "lat_code",
-      key: "lng_code",
+      title: "Số điện thoại",
+      dataIndex: "phone_number",
+      key: "phone_number",
+    },
+    {
+      title: "Website",
+      key: "website_link",
+      dataIndex: "website_link",
+      render: (text) => <a target="_blank" href={text}>{text}</a>,
     },
 
     {
