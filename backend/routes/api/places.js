@@ -24,12 +24,17 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    Place.create(req.body)
-        .then(place => res.json({ msg: 'Place added successfully' }))
-        .catch(err => {
-            console.log(err)
-            res.status(400).json({ error: 'Unable to add this place' })
-        });
+    try {
+        Place.create(req.body)
+            .then(place => res.json({ msg: 'Place added successfully' }))
+            .catch(err => {
+                console.log(err)
+                res.status(400).json({ error: 'Unable to add this place' })
+            });
+    } catch (e) {
+        console.error(e)
+    }
+
 });
 
 router.put('/:id', (req, res) => {

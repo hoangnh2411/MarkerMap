@@ -108,11 +108,15 @@ const CreatePlace = (props: ChildComponentProps) => {
           <Form.Item
             label="Tên"
             name="name"
-            rules={[{ required: true, message: "Vui lòng thêm tên sách" }]}
+            rules={[{ required: true, message: "Vui lòng thêm tên" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item label="Địa chỉ" name="address">
+          <Form.Item
+            label="Địa chỉ"
+            name="address"
+            rules={[{ required: true, message: "Vui lòng thêm địa chỉ" }]}
+          >
             <Input style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item

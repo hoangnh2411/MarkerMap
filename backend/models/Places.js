@@ -20,12 +20,12 @@ const PlaceSchema = new mongoose.Schema({
 
     phone_number: {
         type: String,
-        required: true
+        required: false
     },
 
     website_link: {
         type: String,
-        required: true
+        required: false
     },
 
     category: {

@@ -145,6 +145,11 @@ const Map = () => {
                       icon={<GlobalOutlined style={{verticalAlign: "0.125rem"}}/>}
                       onClick={() => window.open(place.website_link, "_blank")}
                     />
+                    <Button
+                      shape="circle"
+                      icon={<GlobalOutlined style={{verticalAlign: "0.125rem"}}/>}
+                      onClick={() => window.open(`https://www.google.com/maps/dir//${place.name}`, "_blank")}
+                    />
                     <Tooltip title={place.phone_number}>
                       <Button
                         shape="circle"
